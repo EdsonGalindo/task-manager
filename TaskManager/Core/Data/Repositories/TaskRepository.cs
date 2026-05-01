@@ -25,10 +25,10 @@ namespace Data.Repositories
             return default;
         }
 
-        public async Task<IEnumerable<Task>> GetAllTasksAsync(int? id, TaskStatusEnum.Status? status)
+        public async Task<IEnumerable<Task>> GetAllTasksAsync(DateTime? date, TaskStatusEnum.Status? status)
         {
             return await _context.Tasks
-                .Where(t => (!id.HasValue || t.Id == id) && (!status.HasValue || t.Status == status))
+                .Where(t => (!date.HasValue || t.DueDate == date) && (!status.HasValue || t.Status == status))
                 .ToListAsync();
         }
 
