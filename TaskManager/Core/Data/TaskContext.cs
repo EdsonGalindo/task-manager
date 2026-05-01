@@ -5,6 +5,10 @@ namespace Data
 {
     public class TaskContext : DbContext
     {
-        public required DbSet<Task> Tasks { get; set; }
+        public TaskContext(DbContextOptions<TaskContext> options) : base(options) { }
+
+        protected TaskContext() { }
+
+        public DbSet<Task> Tasks { get; set; }
     }
 }
