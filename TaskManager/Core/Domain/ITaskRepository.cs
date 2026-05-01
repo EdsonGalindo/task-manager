@@ -2,10 +2,10 @@
 {
     public interface ITaskRepository
     {
-        Task GetTaskById(int id);
-        IEnumerable<Task> GetAllTasks(int? id, TaskStatusEnum.Status? status);
-        void AddTask(Task task);
-        void UpdateTask(Task task);
-        void DeleteTask(int id);
+        Task<Task?> GetTaskByIdAsync(int id);
+        Task<IEnumerable<Task>> GetAllTasksAsync(int? id, TaskStatusEnum.Status? status);
+        Task<int> AddTaskAsync(Task task);
+        Task<int> UpdateTaskAsync(Task task);
+        Task<int> DeleteTaskAsync(int id);
     }
 }
