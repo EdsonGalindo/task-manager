@@ -4,9 +4,9 @@
     {
         public enum Status
         {
-            Pendente,
-            EmProgresso,
-            Concluída
+            Pending,
+            InProgress,
+            Completed
         }
     }
 }
