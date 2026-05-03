@@ -1,6 +1,7 @@
 ﻿using Application.Dtos;
 using Domain;
 using Task = Domain.Task;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services
 {
@@ -9,16 +10,29 @@ namespace Application.Services
     /// utilizando o repositório ITaskRepository para realizar operações de CRUD em tarefas.
     /// </summary>
     /// <param name="taskRepository">O repositório de tarefas a ser utilizado pelo serviço.</param>
-    public class TaskManagerAppService(ITaskRepository taskRepository) : ITaskManagerAppService
+    public class TaskManagerAppService(
+        ITaskRepository taskRepository,
+        ILogger<TaskManagerAppService> logger) : ITaskManagerAppService
     {
         private readonly ITaskRepository _taskRepository = taskRepository;
+        private readonly ILogger<TaskManagerAppService> _logger = logger;
 
         /// <inheritdoc/>
         public async Task<TaskDto> CreateTaskAsync(TaskDto taskDto)
         {
-            return await _taskRepository.AddTaskAsync(taskDto.ToTask) > 0 ? 
-                taskDto :
-                throw new Exception("Falha ao criar tarefa");
+            try
+            {
+                return await _taskRepository.AddTaskAsync(taskDto.ToTask) > 0 ?
+                    taskDto :
+                    throw new Exception("Falha ao criar tarefa");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, 
+                    "CreateTaskAsync - Erro ao criar tarefa. Mensagem: {errorMessage}",
+                    ex.Message);
+                throw new Exception("Erro ao criar tarefa");
+            }
         }
 
         /// <inheritdoc/>
