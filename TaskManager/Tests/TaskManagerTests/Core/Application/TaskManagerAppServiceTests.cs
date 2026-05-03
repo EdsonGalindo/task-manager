@@ -20,6 +20,8 @@ namespace TaskManagerTests.Core.Application
         #region Contants
         private const string TASK_TITLE = "Minha tarefa de teste";
         private const string TASK_DESCRIPTION = "Minha tarefa de teste";
+        private const string TASK_UPDATE_ERROR_MESSAGE = "Erro ao atualizar tarefa";
+        private const string TASK_TITLE_UPDATED = "Título atualizado";
         #endregion
 
         public TaskManagerAppServiceTests()
@@ -295,7 +297,29 @@ namespace TaskManagerTests.Core.Application
             var result = await Assert.ThrowsAsync<Exception>(async () => await _taskManagerAppService.UpdateTaskAsync(taskDto));
 
             Assert.NotNull(result);
-            Assert.Equal("Erro ao atualizar tarefa", result.Message);
+            Assert.Equal(TASK_UPDATE_ERROR_MESSAGE, result.Message);
+        }
+
+        [Fact]
+        public async Task UpdateTaskAsync_WhenTaskDtoIsValid_ShouldSucceed()
+        {
+            var taskDto = new TaskDto()
+            {
+                Id = 1,
+                Title = TASK_TITLE,
+                Description = TASK_DESCRIPTION,
+                DueDate = DateTime.Now,
+                Status = TaskStatusEnum.Status.Pending
+            };
+            await _taskManagerAppService.CreateTaskAsync(taskDto);
+            _context.ChangeTracker.Clear();
+
+            taskDto.Title = TASK_TITLE_UPDATED;
+            var result = await _taskManagerAppService.UpdateTaskAsync(taskDto);
+            
+            Assert.True(result);
+            var updatedTask = await _taskManagerAppService.GetTaskByIdAsync(1);
+            Assert.Equal(TASK_TITLE_UPDATED, updatedTask.Title);
         }
     }
 }
