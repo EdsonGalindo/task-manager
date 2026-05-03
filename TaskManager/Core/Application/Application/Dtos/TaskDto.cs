@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain;
+using System.ComponentModel.DataAnnotations;
+using Task = Domain.Task;
 
-namespace Domain
+namespace Application.Dtos
 {
     public class TaskDto
     {        
@@ -15,5 +17,14 @@ namespace Domain
 
         [Required(ErrorMessage = "Status é obrigatório")]
         public required TaskStatusEnum.Status Status { get; set; }
+
+        public Task ToTask => new()
+        {
+            Id = this.Id,
+            Title = this.Title,
+            Description = this.Description,
+            DueDate = this.DueDate,
+            Status = this.Status
+        };
     }
 }
