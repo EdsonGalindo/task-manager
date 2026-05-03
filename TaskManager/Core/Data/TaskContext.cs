@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Data.Configurations;
+using Microsoft.EntityFrameworkCore;
 using Task = Domain.Task;
 
 namespace Data
@@ -10,5 +11,12 @@ namespace Data
         protected TaskContext() { }
 
         public DbSet<Task> Tasks { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskContext).Assembly);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
