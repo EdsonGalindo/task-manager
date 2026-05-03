@@ -17,6 +17,11 @@ namespace TaskManagerTests.Core.Application
         private readonly TaskContext _context;
         private readonly ILogger<TaskManagerAppService> _logger;
 
+        #region Contants
+        private const string TASK_TITLE = "Minha tarefa de teste";
+        private const string TASK_DESCRIPTION = "Minha tarefa de teste";
+        #endregion
+
         public TaskManagerAppServiceTests()
         {
             var connection = new SqliteConnection("Filename=:memory:");
@@ -34,17 +39,87 @@ namespace TaskManagerTests.Core.Application
         [Fact]
         public async Task CreateTaskAsync_WhenTaskDtoIsInvalid_ThrowsException()
         {
-            #pragma warning disable CS8625
+#pragma warning disable CS8625
             var taskDto = new TaskDto()
             {
                 Id = 1,
                 Title = null,
-                Description = "Test description",
+                Description = TASK_DESCRIPTION,
                 DueDate = DateTime.Now,
                 Status = TaskStatusEnum.Status.Pending
             };
-            #pragma warning restore CS8625
+#pragma warning restore CS8625
+
             await Assert.ThrowsAsync<Exception>(async () => await _taskManagerAppService.CreateTaskAsync(taskDto));
+        }
+
+        [Fact]
+        public async Task CreateTaskAsync_WhenTaskDtoIsValid_ShouldSucceed()
+        {
+            var taskDto = new TaskDto()
+            {
+                Id = 1,
+                Title = TASK_TITLE,
+                Description = TASK_DESCRIPTION,
+                DueDate = DateTime.Now,
+                Status = TaskStatusEnum.Status.Pending
+            };
+
+            var result = await _taskManagerAppService.CreateTaskAsync(taskDto);
+
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Id);
+            Assert.Equal(TASK_TITLE, result.Title);
+            Assert.Equal(TASK_DESCRIPTION, result.Description);
+        }
+
+        [Fact]
+        public async Task GetTaskByIdAsync_WhenTaskIdIsInvalid_ThrowsException()
+        {
+            await Assert.ThrowsAsync<Exception>(async () => await _taskManagerAppService.GetTaskByIdAsync(999));
+        }
+
+        [Fact]
+        public async Task GetTaskByIdAsync_WhenTaskIdIsValid_ShouldSucceed()
+        {
+            var taskDto = new TaskDto()
+            {
+                Id = 1,
+                Title = TASK_TITLE,
+                Description = TASK_DESCRIPTION,
+                DueDate = DateTime.Now,
+                Status = TaskStatusEnum.Status.Pending
+            };
+            await _taskManagerAppService.CreateTaskAsync(taskDto);
+
+            var result = await _taskManagerAppService.GetTaskByIdAsync(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Id);
+            Assert.Equal(TASK_TITLE, result.Title);
+            Assert.Equal(TASK_DESCRIPTION, result.Description);
+        }
+
+        [Fact]
+        public async Task DeleteTaskAsync_WhenTaskIdIsInvalid_ShouldReturnFalse()
+        {
+            Assert.False(await _taskManagerAppService.DeleteTaskAsync(999));
+        }
+
+        [Fact]
+        public async Task DeleteTaskAsync_WhenTaskIdIsValid_ShouldReturnTrue()
+        {
+            var taskDto = new TaskDto()
+            {
+                Id = 1,
+                Title = TASK_TITLE,
+                Description = TASK_DESCRIPTION,
+                DueDate = DateTime.Now,
+                Status = TaskStatusEnum.Status.Pending
+            };
+            await _taskManagerAppService.CreateTaskAsync(taskDto);
+
+            Assert.True(await _taskManagerAppService.DeleteTaskAsync(1));
         }
     }
 }
