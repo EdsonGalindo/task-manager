@@ -14,9 +14,9 @@ namespace Application.Services
                 throw new Exception("Falha ao criar tarefa");
         }
 
-        public Task<bool> DeleteTaskAsync(int id)
+        public async Task<bool> DeleteTaskAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _taskRepository.DeleteTaskAsync(id) > 0;
         }
 
         public Task<IEnumerable<TaskDto>> GetAllTasksAsync(DateTime? date, TaskStatusEnum.Status? taskStatus)
