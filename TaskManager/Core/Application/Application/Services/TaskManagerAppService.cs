@@ -60,11 +60,11 @@ namespace Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<TaskDto> GetTaskByIdAsync(int id)
+        public async Task<TaskDto?> GetTaskByIdAsync(int id)
         {
             return await _taskRepository.GetTaskByIdAsync(id) is Task task ?
                 TaskDto.Task2TaskDto.Compile().Invoke(task) :
-                throw new Exception("Tarefa não encontrada");
+                null;
         }
 
         /// <inheritdoc/>

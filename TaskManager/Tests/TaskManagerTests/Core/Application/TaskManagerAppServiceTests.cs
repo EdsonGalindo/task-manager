@@ -78,7 +78,8 @@ namespace TaskManagerTests.Core.Application
         [Fact]
         public async Task GetTaskByIdAsync_WhenTaskIdIsInvalid_ThrowsException()
         {
-            await Assert.ThrowsAsync<Exception>(async () => await _taskManagerAppService.GetTaskByIdAsync(999));
+            var result = await _taskManagerAppService.GetTaskByIdAsync(999);
+            Assert.Null(result);
         }
 
         [Fact]

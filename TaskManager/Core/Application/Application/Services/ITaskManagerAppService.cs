@@ -22,7 +22,7 @@ namespace Application.Services
         /// </summary>
         /// <param name="id">ID da tarefa a ser obtida.</param>
         /// <returns>O TaskDto correspondente ao ID fornecido.</returns>
-        Task<TaskDto> GetTaskByIdAsync(int id);
+        Task<TaskDto?> GetTaskByIdAsync(int id);
 
         /// <summary>
         /// Cria uma nova tarefa com base no TaskDto fornecido. Se a criação for bem-sucedida, retorna o TaskDto criado; caso contrário, lança uma exceção.
