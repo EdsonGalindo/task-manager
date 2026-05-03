@@ -22,9 +22,9 @@ namespace Application.Services
         {
             try
             {
-                return await _taskRepository.AddTaskAsync(taskDto.ToTask) > 0 ?
-                    taskDto :
-                    throw new Exception("Falha ao criar tarefa");
+                    return await _taskRepository.AddTaskAsync(taskDto.ToTask) is Task task ?
+                        TaskDto.Task2TaskDto.Compile().Invoke(task) :
+                        throw new Exception("Falha ao criar tarefa");
             }
             catch (Exception ex)
             {

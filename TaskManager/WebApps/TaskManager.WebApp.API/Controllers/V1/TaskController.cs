@@ -60,7 +60,7 @@ namespace TaskManager.WebApp.API.Controllers.V1
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask([FromBody] TaskDto taskDto)
+        public async Task<ActionResult<TaskDto>> CreateTask([FromBody] TaskDto taskDto)
         {
             try
             {

@@ -8,10 +8,11 @@ namespace Data.Repositories
     {
         private readonly TaskContext _context = context;
 
-        public async Task<int> AddTaskAsync(Task task)
+        public async Task<Task> AddTaskAsync(Task task)
         {
             _context.Tasks.Add(task);
-            return await SaveDbChanges();
+            await SaveDbChanges();
+            return task;
         }
 
         public async Task<int> DeleteTaskAsync(int id)
