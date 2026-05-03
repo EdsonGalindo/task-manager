@@ -1,8 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace TaskManager.WebApp.API.Controllers.V1
 {
