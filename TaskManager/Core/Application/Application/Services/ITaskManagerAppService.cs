@@ -6,7 +6,7 @@ namespace Application.Services
     {
         Task<IEnumerable<TaskDto>> GetAllTasksAsync(DateTime? date, TaskStatusEnum.Status? taskStatus);
         Task<TaskDto> GetTaskByIdAsync(int id);
-        Task<bool> CreateTaskAsync(TaskDto taskDto);
+        Task<TaskDto> CreateTaskAsync(TaskDto taskDto);
         Task<bool> UpdateTaskAsync(TaskDto taskDto);
         Task<bool> DeleteTaskAsync(int id);
     }
