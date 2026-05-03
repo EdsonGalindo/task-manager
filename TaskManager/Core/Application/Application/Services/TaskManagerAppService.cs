@@ -12,9 +12,11 @@ namespace Application.Services
             _taskRepository = taskRepository;
         }
 
-        public Task<TaskDto> CreateTaskAsync(TaskDto taskDto)
+        public async Task<TaskDto> CreateTaskAsync(TaskDto taskDto)
         {
-            throw new NotImplementedException();
+            return await _taskRepository.AddTaskAsync(taskDto.ToTask) > 0 ? 
+                taskDto :
+                throw new Exception("Falha ao criar tarefa");
         }
 
         public Task<bool> DeleteTaskAsync(int id)
