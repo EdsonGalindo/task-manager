@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Domain;
+using Task = Domain.Task;
 
 namespace Application.Services
 {
@@ -19,9 +20,11 @@ namespace Application.Services
             return await _taskRepository.DeleteTaskAsync(id) > 0;
         }
 
-        public Task<IEnumerable<TaskDto>> GetAllTasksAsync(DateTime? date, TaskStatusEnum.Status? taskStatus)
+        public async Task<IEnumerable<TaskDto>> GetAllTasksAsync(DateTime? date, TaskStatusEnum.Status? taskStatus)
         {
-            throw new NotImplementedException();
+            return await _taskRepository.GetAllTasksAsync(date, taskStatus) is IEnumerable<Task> tasks ?
+                tasks.Select(TaskDto.Task2TaskDto.Compile()) :
+                throw new Exception("Falha ao obter tarefas");
         }
 
         public Task<TaskDto> GetTaskByIdAsync(int id)

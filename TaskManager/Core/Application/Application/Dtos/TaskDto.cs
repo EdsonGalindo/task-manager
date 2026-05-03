@@ -1,5 +1,6 @@
 ﻿using Domain;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using Task = Domain.Task;
 
 namespace Application.Dtos
@@ -25,6 +26,15 @@ namespace Application.Dtos
             Description = this.Description,
             DueDate = this.DueDate,
             Status = this.Status
+        };
+
+        public static Expression<Func<Task, TaskDto>> Task2TaskDto => task => new TaskDto()
+        {
+            Id = task.Id,
+            Title = task.Title,
+            Description = task.Description,
+            DueDate = task.DueDate,
+            Status = task.Status
         };
     }
 }
