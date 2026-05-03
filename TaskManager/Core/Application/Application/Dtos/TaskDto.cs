@@ -19,6 +19,7 @@ namespace Application.Dtos
         public DateTime? DueDate { get; set; }
 
         [Required(ErrorMessage = "Status é obrigatório")]
+        [EnumDataType(typeof(TaskStatusEnum.Status), ErrorMessage = "Status inválido")]
         public required TaskStatusEnum.Status Status { get; set; }
 
         [JsonIgnore]
