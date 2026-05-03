@@ -3,14 +3,9 @@ using Domain;
 
 namespace Application.Services
 {
-    public class TaskManagerAppService : ITaskManagerAppService
+    public class TaskManagerAppService(ITaskRepository taskRepository) : ITaskManagerAppService
     {
-        private readonly ITaskRepository _taskRepository;
-
-        public TaskManagerAppService(ITaskRepository taskRepository)
-        {
-            _taskRepository = taskRepository;
-        }
+        private readonly ITaskRepository _taskRepository = taskRepository;
 
         public async Task<TaskDto> CreateTaskAsync(TaskDto taskDto)
         {
