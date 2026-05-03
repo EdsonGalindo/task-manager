@@ -1,6 +1,8 @@
 ﻿using Domain;
+using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 using Task = Domain.Task;
 
 namespace Application.Dtos
@@ -19,6 +21,7 @@ namespace Application.Dtos
         [Required(ErrorMessage = "Status é obrigatório")]
         public required TaskStatusEnum.Status Status { get; set; }
 
+        [JsonIgnore]
         public Task ToTask => new()
         {
             Id = this.Id,
