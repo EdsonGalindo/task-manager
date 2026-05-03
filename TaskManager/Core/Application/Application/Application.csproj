@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.15" />
+    <PackageReference Include="NSwag.Annotations" Version="14.7.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,84 @@
+﻿using Application.Dtos;
+using Application.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
+namespace TaskManager.WebApp.API.Controllers.V1
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TaskController : ControllerBase
+    {
+        private readonly ITaskManagerAppService _taskManagerAppService;
+        private readonly ILogger<TaskController> _logger;
+
+        public TaskController(
+            ITaskManagerAppService taskManagerAppService,
+            ILogger<TaskController> logger)
+        {
+            _taskManagerAppService = taskManagerAppService;
+            _logger = logger;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TaskDto>>> GetAllTasks()
+        {
+            try
+            {
+                var result = await _taskManagerAppService.GetAllTasksAsync(null, null);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "GetAllTasks - Ocorreu um erro ao obter as tarefas. Mensagem: {Message}",
+                    ex.Message);
+                return BadRequest("Ocorreu um erro ao obter as tarefas, tente novamente mais tarde.");
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TaskDto>> GetTaskById(int id)
+        {
+            try
+            {
+                var result = await _taskManagerAppService.GetTaskByIdAsync(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "GetTaskById - Ocorreu um erro ao obter a tarefa com ID {Id}. Mensagem: {Message}",
+                    id, ex.Message);
+                return BadRequest("Ocorreu um erro ao obter a tarefa, tente novamente mais tarde.");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTask([FromBody] TaskDto taskDto)
+        {
+            try
+            {
+                if(!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _taskManagerAppService.CreateTaskAsync(taskDto);
+                return CreatedAtAction(nameof(GetTaskById), new { id = result.Id }, result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "CreateTask - Ocorreu um erro ao criar a tarefa. Mensagem: {Message}",
+                    ex.Message);
+                return BadRequest("Ocorreu um erro ao criar a tarefa, tente novamente mais tarde.");
+            }
+        }
+    }
+}
