@@ -81,5 +81,33 @@ namespace TaskManager.WebApp.API.Controllers.V1
                 return BadRequest("Ocorreu um erro ao criar a tarefa, tente novamente mais tarde.");
             }
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateTask([FromBody] TaskDto taskDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _taskManagerAppService.UpdateTaskAsync(taskDto);
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "UpdateTask - Ocorreu um erro ao atualizar a tarefa com ID {Id}. Mensagem: {Message}",
+                    taskDto.Id,
+                    ex.Message);
+                return BadRequest("Ocorreu um erro ao atualizar a tarefa, tente novamente mais tarde.");
+            }
+        }
     }
 }
