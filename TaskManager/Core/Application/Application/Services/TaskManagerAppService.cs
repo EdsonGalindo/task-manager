@@ -34,9 +34,9 @@ namespace Application.Services
                 throw new Exception("Tarefa não encontrada");
         }
 
-        public Task<bool> UpdateTaskAsync(TaskDto taskDto)
+        public async Task<bool> UpdateTaskAsync(TaskDto taskDto)
         {
-            throw new NotImplementedException();
+            return await _taskRepository.UpdateTaskAsync(taskDto.ToTask) > 0;
         }
     }
 }
