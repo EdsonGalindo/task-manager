@@ -60,7 +60,17 @@ namespace Application.Services
         /// <inheritdoc/>
         public async Task<bool> UpdateTaskAsync(TaskDto taskDto)
         {
-            return await _taskRepository.UpdateTaskAsync(taskDto.ToTask) > 0;
+            try
+            {
+                return await _taskRepository.UpdateTaskAsync(taskDto.ToTask) > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "UpdateTaskAsync - Erro ao atualizar tarefa. Id: {taskId}, Mensagem: {errorMessage}",
+                    taskDto.Id, ex.Message);
+                throw new Exception("Erro ao atualizar tarefa");
+            }
         }
     }
 }
