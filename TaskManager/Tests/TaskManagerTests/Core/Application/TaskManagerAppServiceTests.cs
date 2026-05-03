@@ -238,11 +238,41 @@ namespace TaskManagerTests.Core.Application
             await _taskManagerAppService.CreateTaskAsync(taskDto1);
             await _taskManagerAppService.CreateTaskAsync(taskDto2);
 
-            var result = await _taskManagerAppService.GetAllTasksAsync(taskDto1.DueDate, TaskStatusEnum.Status.Pending);
+            var result = await _taskManagerAppService.GetAllTasksAsync(
+                taskDto1.DueDate, TaskStatusEnum.Status.Pending);
             
             Assert.NotNull(result);
             Assert.Single(result);
             Assert.Equal(1, result.First().Id);
+        }
+
+        [Fact]
+        public async Task GetAllTasksAsync_WhenFilteringByDateAndStatusWithNoMatches_ShouldReturnEmptyList()
+        {
+            var taskDto1 = new TaskDto()
+            {
+                Id = 1,
+                Title = TASK_TITLE,
+                Description = TASK_DESCRIPTION,
+                DueDate = DateTime.Now,
+                Status = TaskStatusEnum.Status.Pending
+            };
+            var taskDto2 = new TaskDto()
+            {
+                Id = 2,
+                Title = TASK_TITLE,
+                Description = TASK_DESCRIPTION,
+                DueDate = DateTime.Now.AddDays(1),
+                Status = TaskStatusEnum.Status.InProgress
+            };
+            await _taskManagerAppService.CreateTaskAsync(taskDto1);
+            await _taskManagerAppService.CreateTaskAsync(taskDto2);
+
+            var result = await _taskManagerAppService.GetAllTasksAsync(
+                DateTime.Now.AddDays(2), TaskStatusEnum.Status.Completed);
+            
+            Assert.NotNull(result);
+            Assert.Empty(result);
         }
     }
 }
