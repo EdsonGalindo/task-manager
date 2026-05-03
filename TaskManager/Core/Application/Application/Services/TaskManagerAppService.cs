@@ -27,9 +27,11 @@ namespace Application.Services
                 throw new Exception("Falha ao obter tarefas");
         }
 
-        public Task<TaskDto> GetTaskByIdAsync(int id)
+        public async Task<TaskDto> GetTaskByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _taskRepository.GetTaskByIdAsync(id) is Task task ?
+                TaskDto.Task2TaskDto.Compile().Invoke(task) :
+                throw new Exception("Tarefa não encontrada");
         }
 
         public Task<bool> UpdateTaskAsync(TaskDto taskDto)
