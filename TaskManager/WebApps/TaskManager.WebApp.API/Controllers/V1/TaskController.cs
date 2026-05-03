@@ -65,7 +65,7 @@ namespace TaskManager.WebApp.API.Controllers.V1
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
@@ -107,6 +107,29 @@ namespace TaskManager.WebApp.API.Controllers.V1
                     taskDto.Id,
                     ex.Message);
                 return BadRequest("Ocorreu um erro ao atualizar a tarefa, tente novamente mais tarde.");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTask(int id)
+        {
+            try
+            {
+                var result = await _taskManagerAppService.DeleteTaskAsync(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "DeleteTask - Ocorreu um erro ao deletar a tarefa com ID {Id}. Mensagem: {Message}",
+                    id,
+                    ex.Message);
+                return BadRequest("Ocorreu um erro ao deletar a tarefa, tente novamente mais tarde.");
             }
         }
     }
