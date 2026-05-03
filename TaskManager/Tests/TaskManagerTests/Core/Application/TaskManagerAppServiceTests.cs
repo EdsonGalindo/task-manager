@@ -125,6 +125,27 @@ namespace TaskManagerTests.Core.Application
         }
 
         [Fact]
+        public async Task DeleteTaskAsync_WhenOcurredError_ThrowException()
+        {
+            var taskDto = new TaskDto()
+            {
+                Id = 1,
+                Title = TASK_TITLE,
+                Description = TASK_DESCRIPTION,
+                DueDate = DateTime.Now,
+                Status = TaskStatusEnum.Status.Pending
+            };
+            await _taskManagerAppService.CreateTaskAsync(taskDto);
+            _context.ChangeTracker.Clear();
+            _context.Database.GetDbConnection().Close();
+
+            var result = await Assert.ThrowsAsync<Exception>(async () => await _taskManagerAppService.DeleteTaskAsync(1));
+            
+            Assert.NotNull(result);
+            Assert.Equal("Erro ao deletar tarefa", result.Message);
+        }
+
+        [Fact]
         public async Task GetAllTasksAsync_WhenNoTasksExist_ShouldReturnEmptyList()
         {
             var result = await _taskManagerAppService.GetAllTasksAsync(null, null);
