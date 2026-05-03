@@ -2,7 +2,8 @@
 using Data.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
-using Task = Domain.Task;
+using Task = System.Threading.Tasks.Task;
+using TaskManagerItem = Domain.Task;
 
 namespace TaskManagerTests.Core.Data;
 
@@ -23,22 +24,24 @@ public class TaskRepositoryTests
     [Fact]
     public void AddTaskAsync_WhenTaskEntityIsInvalid_ThrowsArgumentException()
     {
-        var task = new Task()
+#pragma warning disable CS8625
+        var task = new TaskManagerItem()
         {
             Id = 1,
-            Title = string.Empty,
+            Title = null,
             Description = "Test description",
             DueDate = DateTime.Now,
             Status = TaskStatusEnum.Status.Pending
         };
+#pragma warning restore CS8625
 
-        Assert.ThrowsAsync<ArgumentException>(() => _taskRepository.AddTaskAsync(task));
+        Assert.Throws<AggregateException>(() => _taskRepository.AddTaskAsync(task).Result);
     }
 
     [Fact]
     public void AddTaskAsync_WhenTaskEntityIsValid_ShouldSucceed()
     {
-        var task = new Task()
+        var task = new TaskManagerItem()
         {
             Id = 1,
             Title = "Test Task",
@@ -56,7 +59,7 @@ public class TaskRepositoryTests
     [Fact]
     public void UpdateTaskAsync_WhenTaskEntityIsInvalid_ThrowsArgumentException()
     {
-        var task = new Task()
+        var task = new TaskManagerItem()
         {
             Id = 1,
             Title = string.Empty,
@@ -69,9 +72,9 @@ public class TaskRepositoryTests
     }
 
     [Fact]
-    public async void UpdateTaskAsync_WhenTaskEntityIsValid_ShouldSucceed()
+    public async Task UpdateTaskAsync_WhenTaskEntityIsValid_ShouldSucceed()
     {
-        var task = new Task()
+        var task = new TaskManagerItem()
         {
             Id = 1,
             Title = "Test Task",
@@ -88,9 +91,9 @@ public class TaskRepositoryTests
     }
 
     [Fact]
-    public async void UpdateTaskAsync_WhenTaskEntityNotExists_ShouldThrowException()
+    public async Task UpdateTaskAsync_WhenTaskEntityNotExists_ShouldThrowException()
     {
-        var task = new Task()
+        var task = new TaskManagerItem()
         {
             Id = 1,
             Title = "Test Task",
@@ -104,15 +107,15 @@ public class TaskRepositoryTests
     }
 
     [Fact]
-    public async void DeleteTaskAsync_WhenTaskEntityNotExists_ShouldReturnZeroLineAffected()
+    public async Task DeleteTaskAsync_WhenTaskEntityNotExists_ShouldReturnZeroLineAffected()
     {
         Assert.Equal(0, await _taskRepository.DeleteTaskAsync(1));
     }
 
     [Fact]
-    public async void DeleteTaskAsync_WhenTaskEntityExists_ShouldReturnOneLineAffected()
+    public async Task DeleteTaskAsync_WhenTaskEntityExists_ShouldReturnOneLineAffected()
     {
-        var task = new Task()
+        var task = new TaskManagerItem()
         {
             Id = 1,
             Title = "Test Task",
@@ -126,16 +129,16 @@ public class TaskRepositoryTests
     }
 
     [Fact]
-    public async void GetTaskByIdAsync_WhenTaskNotExists_ShouldReturnNull()
+    public async Task GetTaskByIdAsync_WhenTaskNotExists_ShouldReturnNull()
     {
         var result = await _taskRepository.GetTaskByIdAsync(1);
         Assert.Null(result);
     }
 
     [Fact]
-    public async void GetTaskByIdAsync_WhenTaskExists_ShouldReturnTask()
+    public async Task GetTaskByIdAsync_WhenTaskExists_ShouldReturnTaskManagerItem()
     {
-        var task = new Task()
+        var task = new TaskManagerItem()
         {
             Title = "Test Task",
             Description = "Test description",
@@ -151,23 +154,23 @@ public class TaskRepositoryTests
     }
 
     [Fact]
-    public async void GetAllTasksAsync_WhenNoTaskExists_ShouldReturnEmptyList()
+    public async Task GetAllTasksAsync_WhenNoTaskExists_ShouldReturnEmptyList()
     {
         var result = await _taskRepository.GetAllTasksAsync(null, null);
         Assert.Empty(result);
     }
 
     [Fact]
-    public async void GetAllTasksAsync_WhenTasksExist_ShouldReturnTaskList()
+    public async Task GetAllTasksAsync_WhenTasksExist_ShouldReturnTaskList()
     {
-        var task1 = new Task()
+        var task1 = new TaskManagerItem()
         {
             Title = "Test Task 1",
             Description = "Test description 1",
             DueDate = DateTime.Now,
             Status = TaskStatusEnum.Status.Pending
         };
-        var task2 = new Task()
+        var task2 = new TaskManagerItem()
         {
             Title = "Test Task 2",
             Description = "Test description 2",
@@ -184,16 +187,16 @@ public class TaskRepositoryTests
     }
 
     [Fact]
-    public async void GetAllTasksAsync_FilterByStatusWhenTasksExist_ShouldReturnFilteredTaskList()
+    public async Task GetAllTasksAsync_FilterByStatusWhenTasksExist_ShouldReturnFilteredTaskList()
     {
-        var task1 = new Task()
+        var task1 = new TaskManagerItem()
         {
             Title = "Test Task 1",
             Description = "Test description 1",
             DueDate = DateTime.Now,
             Status = TaskStatusEnum.Status.Pending
         };
-        var task2 = new Task()
+        var task2 = new TaskManagerItem()
         {
             Title = "Test Task 2",
             Description = "Test description 2",
@@ -211,16 +214,16 @@ public class TaskRepositoryTests
     }
 
     [Fact]
-    public async void GetAllTasksAsync_FilterByDueDateWhenTasksExist_ShouldReturnFilteredTaskList()
+    public async Task GetAllTasksAsync_FilterByDueDateWhenTasksExist_ShouldReturnFilteredTaskList()
     {
-        var task1 = new Task()
+        var task1 = new TaskManagerItem()
         {
             Title = "Test Task 1",
             Description = "Test description 1",
             DueDate = DateTime.Now,
             Status = TaskStatusEnum.Status.Pending
         };
-        var task2 = new Task()
+        var task2 = new TaskManagerItem()
         {
             Title = "Test Task 2",
             Description = "Test description 2",
