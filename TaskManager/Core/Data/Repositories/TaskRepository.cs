@@ -29,7 +29,9 @@ namespace Data.Repositories
         public async Task<IEnumerable<Task>> GetAllTasksAsync(DateTime? date, TaskStatusEnum.Status? status)
         {
             return await _context.Tasks
-                .Where(t => (!date.HasValue || t.DueDate == date) && (!status.HasValue || t.Status == status))
+                .Where(t => (!date.HasValue || 
+                    (t.DueDate >= date.Value.Date && t.DueDate < date.Value.Date.AddDays(1)))
+                && (!status.HasValue || (t.Status == status)))
                 .ToListAsync();
         }
 

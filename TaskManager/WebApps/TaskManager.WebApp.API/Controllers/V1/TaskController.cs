@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Services;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TaskManager.WebApp.API.Controllers.V1
@@ -20,11 +21,13 @@ namespace TaskManager.WebApp.API.Controllers.V1
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TaskDto>>> GetAllTasks()
+        public async Task<ActionResult<IEnumerable<TaskDto>>> GetAllTasks(
+            [FromQuery] DateTime? dueDate,
+            [FromQuery] TaskStatusEnum.Status? status)
         {
             try
             {
-                var result = await _taskManagerAppService.GetAllTasksAsync(null, null);
+                var result = await _taskManagerAppService.GetAllTasksAsync(dueDate, status);
                 return Ok(result);
             }
             catch (Exception ex)
