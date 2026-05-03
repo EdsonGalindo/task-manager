@@ -38,7 +38,17 @@ namespace Application.Services
         /// <inheritdoc/>
         public async Task<bool> DeleteTaskAsync(int id)
         {
-            return await _taskRepository.DeleteTaskAsync(id) > 0;
+            try
+            {
+                return await _taskRepository.DeleteTaskAsync(id) > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "DeleteTaskAsync - Erro ao deletar tarefa. Id: {taskId}, Mensagem: {errorMessage}",
+                    id, ex.Message);
+                throw new Exception("Erro ao deletar tarefa");
+            }
         }
 
         /// <inheritdoc/>
