@@ -2,7 +2,9 @@
 using Data;
 using Data.Repositories;
 using Domain;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 
 namespace TaskManager.WebApp.API.Configuration
 {
@@ -12,9 +14,16 @@ namespace TaskManager.WebApp.API.Configuration
         {
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<ITaskManagerAppService, TaskManagerAppService>();
-            
-            services.AddDbContext<TaskContext>(options => 
-                options.UseSqlite("Filename=:memory:"));
+
+            var connection = new SqliteConnection("Filename=:memory:");
+            connection.Open();
+            services.AddSingleton(connection);
+
+            services.AddDbContext<TaskContext>((serviceProvider, options) =>
+            {
+                var sqliteConnection = serviceProvider.GetRequiredService<SqliteConnection>();
+                options.UseSqlite(sqliteConnection);
+            });
 
             return services;
         }
