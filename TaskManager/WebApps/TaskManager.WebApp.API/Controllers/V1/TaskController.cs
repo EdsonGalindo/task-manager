@@ -1,12 +1,14 @@
 ﻿using Application.Dtos;
 using Application.Services;
+using Asp.Versioning;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace TaskManager.WebApp.API.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class TaskController : ControllerBase
     {
@@ -97,6 +99,7 @@ namespace TaskManager.WebApp.API.Controllers.V1
         }
 
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerOperation(Summary = "Atualiza uma tarefa existente no sistema",
@@ -110,10 +113,16 @@ namespace TaskManager.WebApp.API.Controllers.V1
                     return BadRequest(ModelState);
                 }
 
+                var taskExists = await _taskManagerAppService.GetTaskExistsByIdAsync(taskDto.Id);
+                if (!taskExists)
+                {
+                    return NotFound();
+                }
+
                 var result = await _taskManagerAppService.UpdateTaskAsync(taskDto);
                 if (!result)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
 
                 return NoContent();
