@@ -17,7 +17,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+    });
 }
 
 #region Garante que o banco foi criado ao iniciar a aplicação, utilizando o contexto de banco de dados para criar o banco caso ele ainda não exista.

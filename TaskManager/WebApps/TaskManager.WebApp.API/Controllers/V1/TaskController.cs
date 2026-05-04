@@ -2,6 +2,7 @@
 using Application.Services;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace TaskManager.WebApp.API.Controllers.V1
 {
@@ -23,6 +24,8 @@ namespace TaskManager.WebApp.API.Controllers.V1
         [HttpGet]
         [ProducesResponseType(typeof(TaskDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(Summary = "Obtém uma lista de tarefas cadastradas no sistema", 
+            Description = "obtém uma lista de tarefas cadastradas no sistema, podendo ser realizado filtro por data de vencimento ou status")]
         public async Task<ActionResult<IEnumerable<TaskDto>>> GetAllTasks(
             [FromQuery] DateTime? dueDate,
             [FromQuery] TaskStatusEnum.Status? status)
@@ -45,6 +48,8 @@ namespace TaskManager.WebApp.API.Controllers.V1
         [ProducesResponseType(typeof(TaskDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(Summary = "Obtém uma tarefa cadastrada no sistema",
+            Description = "Obtém uma tarefa previamente cadastrada no sistema")]
         public async Task<ActionResult<TaskDto>> GetTaskById(int id)
         {
             try
@@ -68,6 +73,8 @@ namespace TaskManager.WebApp.API.Controllers.V1
         [HttpPost]
         [ProducesResponseType(typeof(TaskDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(Summary = "Cadastra uma nova tarefa no sistema",
+            Description = "Cadastra uma nova tarefa no sistema de acordo com os dados informados")]
         public async Task<ActionResult<TaskDto>> CreateTask([FromBody] TaskDto taskDto)
         {
             try
@@ -92,6 +99,8 @@ namespace TaskManager.WebApp.API.Controllers.V1
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(Summary = "Atualiza uma tarefa existente no sistema",
+            Description = "Atualiza as informações de uma tarefa previamente cadastrada no sistema")]
         public async Task<ActionResult> UpdateTask([FromBody] TaskDto taskDto)
         {
             try
@@ -122,6 +131,8 @@ namespace TaskManager.WebApp.API.Controllers.V1
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(Summary = "Remove uma tarefa existente no sistema",
+            Description = "Remove uma tarefa previamente cadastrada no sistema")]
         public async Task<ActionResult> DeleteTask(int id)
         {
             try
