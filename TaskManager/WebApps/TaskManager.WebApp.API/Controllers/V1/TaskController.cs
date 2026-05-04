@@ -21,6 +21,8 @@ namespace TaskManager.WebApp.API.Controllers.V1
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(TaskDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<TaskDto>>> GetAllTasks(
             [FromQuery] DateTime? dueDate,
             [FromQuery] TaskStatusEnum.Status? status)
@@ -40,6 +42,9 @@ namespace TaskManager.WebApp.API.Controllers.V1
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TaskDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TaskDto>> GetTaskById(int id)
         {
             try
@@ -61,6 +66,8 @@ namespace TaskManager.WebApp.API.Controllers.V1
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(TaskDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TaskDto>> CreateTask([FromBody] TaskDto taskDto)
         {
             try
@@ -83,6 +90,8 @@ namespace TaskManager.WebApp.API.Controllers.V1
         }
 
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> UpdateTask([FromBody] TaskDto taskDto)
         {
             try
@@ -111,6 +120,8 @@ namespace TaskManager.WebApp.API.Controllers.V1
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> DeleteTask(int id)
         {
             try
