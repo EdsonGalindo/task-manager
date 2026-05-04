@@ -68,6 +68,22 @@ namespace Application.Services
         }
 
         /// <inheritdoc/>
+        public async Task<bool> GetTaskExistsByIdAsync(int id)
+        {
+            try
+            {
+                return await _taskRepository.GetTaskExistsByIdAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "GetTaskExistsByIdAsync - Erro ao verificar existência de tarefa. Id: {taskId}, Mensagem: {errorMessage}",
+                    id, ex.Message);
+                throw new Exception("Erro ao verificar existência de tarefa");
+            }
+        }
+
+        /// <inheritdoc/>
         public async Task<bool> UpdateTaskAsync(TaskDto taskDto)
         {
             try

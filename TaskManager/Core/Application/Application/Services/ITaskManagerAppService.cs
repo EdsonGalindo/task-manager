@@ -18,6 +18,13 @@ namespace Application.Services
         Task<IEnumerable<TaskDto>> GetAllTasksAsync(DateTime? date, TaskStatusEnum.Status? taskStatus);
 
         /// <summary>
+        /// Verifica se uma tarefa existe pelo seu ID. Retorna true se a tarefa existir; caso contrário, retorna false.
+        /// </summary>
+        /// <param name="id">ID da tarefa a ser verificada.</param>
+        /// <returns>True se a tarefa existir; caso contrário, false.</returns>
+        Task<bool> GetTaskExistsByIdAsync(int id);
+
+        /// <summary>
         /// Obtém uma tarefa específica pelo seu ID. Se a tarefa não for encontrada, lança uma exceção.
         /// </summary>
         /// <param name="id">ID da tarefa a ser obtida.</param>

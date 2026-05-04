@@ -40,6 +40,11 @@ namespace Data.Repositories
              return await _context.Tasks.FindAsync(id);
         }
 
+        public async Task<bool> GetTaskExistsByIdAsync(int id)
+        {
+            return await _context.Tasks.AsNoTracking().AnyAsync(t => t.Id == id);
+        }
+
         public async Task<int> UpdateTaskAsync(Task task)
         {
             _context.Tasks.Update(task);
