@@ -1,6 +1,7 @@
 ﻿using Domain;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 using Task = Domain.Task;
 
 namespace Application.Dtos
@@ -17,8 +18,10 @@ namespace Application.Dtos
         public DateTime? DueDate { get; set; }
 
         [Required(ErrorMessage = "Status é obrigatório")]
+        [EnumDataType(typeof(TaskStatusEnum.Status), ErrorMessage = "Status inválido")]
         public required TaskStatusEnum.Status Status { get; set; }
 
+        [JsonIgnore]
         public Task ToTask => new()
         {
             Id = this.Id,

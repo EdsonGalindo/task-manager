@@ -22,9 +22,9 @@ namespace Application.Services
         {
             try
             {
-                return await _taskRepository.AddTaskAsync(taskDto.ToTask) > 0 ?
-                    taskDto :
-                    throw new Exception("Falha ao criar tarefa");
+                    return await _taskRepository.AddTaskAsync(taskDto.ToTask) is Task task ?
+                        TaskDto.Task2TaskDto.Compile().Invoke(task) :
+                        throw new Exception("Falha ao criar tarefa");
             }
             catch (Exception ex)
             {
@@ -60,11 +60,27 @@ namespace Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<TaskDto> GetTaskByIdAsync(int id)
+        public async Task<TaskDto?> GetTaskByIdAsync(int id)
         {
             return await _taskRepository.GetTaskByIdAsync(id) is Task task ?
                 TaskDto.Task2TaskDto.Compile().Invoke(task) :
-                throw new Exception("Tarefa não encontrada");
+                null;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> GetTaskExistsByIdAsync(int id)
+        {
+            try
+            {
+                return await _taskRepository.GetTaskExistsByIdAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "GetTaskExistsByIdAsync - Erro ao verificar existência de tarefa. Id: {taskId}, Mensagem: {errorMessage}",
+                    id, ex.Message);
+                throw new Exception("Erro ao verificar existência de tarefa");
+            }
         }
 
         /// <inheritdoc/>

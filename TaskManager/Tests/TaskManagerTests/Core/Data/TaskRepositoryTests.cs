@@ -57,7 +57,7 @@ public class TaskRepositoryTests
     }
 
     [Fact]
-    public void UpdateTaskAsync_WhenTaskEntityIsInvalid_ThrowsArgumentException()
+    public async Task UpdateTaskAsync_WhenTaskEntityIsInvalid_ThrowsArgumentException()
     {
         var task = new TaskManagerItem()
         {
@@ -68,7 +68,7 @@ public class TaskRepositoryTests
             Status = TaskStatusEnum.Status.Pending
         };
 
-        Assert.ThrowsAsync<ArgumentException>(() => _taskRepository.UpdateTaskAsync(task));
+        await Assert.ThrowsAsync<DbUpdateConcurrencyException>(async () => await _taskRepository.UpdateTaskAsync(task));
     }
 
     [Fact]
